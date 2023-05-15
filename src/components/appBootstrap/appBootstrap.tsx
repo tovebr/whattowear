@@ -8,8 +8,9 @@ import {
 } from '@expo-google-fonts/roboto';
 import { useAuth } from '../../contexts/authContext';
 import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../../firebase/config';
+import { auth, db } from '../../../firebase/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { doc, onSnapshot } from 'firebase/firestore';
 
 interface AppBootstrapProps {
   children: ReactNode;
@@ -19,7 +20,8 @@ SplashScreen.preventAutoHideAsync();
 export default function AppBootstrap({ children }: AppBootstrapProps) {
   const [fontLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
   // const [authLoaded, setAuthLoaded] = useState(false);
-  const { setUser, user, loadingUser, setLoadingUser } = useAuth();
+  const { setUser, user, loadingUser, setLoadingUser, setWardrobe, wardrobe } =
+    useAuth();
 
   useEffect(() => {
     setLoadingUser(true);
@@ -46,8 +48,30 @@ export default function AppBootstrap({ children }: AppBootstrapProps) {
       loginWithStorageInfo();
     }
 
-    return unSubscribe;
+    return () => unSubscribe();
   }, []);
+
+  useEffect(() => {
+    setLoadingUser(true);
+    let unsub: Function = () => {};
+
+    if (user) {
+      const colRef = doc(db, 'wardrobes', user?.uid);
+      unsub = onSnapshot(colRef, (doc) => {
+        if (doc.exists() && doc.data()) {
+          setWardrobe({
+            tops: doc.data().tops,
+            bottoms: doc.data().bottoms,
+            fullbody: doc.data().fullbody,
+          });
+          // console.log(doc.data());
+        }
+      });
+    }
+
+    setLoadingUser(false);
+    return () => unsub();
+  }, [user]);
 
   if (!loadingUser) SplashScreen.hideAsync();
 

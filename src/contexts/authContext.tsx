@@ -7,10 +7,13 @@ import React, {
   useState,
 } from 'react';
 import { User } from 'firebase/auth';
+import { Wardrobe } from '../types/types';
 
 type AuthContextType = {
   user: User | null;
   setUser: Dispatch<SetStateAction<User | null>>;
+  wardrobe: Wardrobe | null;
+  setWardrobe: Dispatch<SetStateAction<Wardrobe | null>>;
   loadingUser: boolean;
   setLoadingUser: Dispatch<SetStateAction<boolean>>;
 };
@@ -25,12 +28,20 @@ function useAuth(): AuthContextType {
 
 const AuthProvider = (props: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [wardrobe, setWardrobe] = useState<Wardrobe | null>(null);
   const [loadingUser, setLoadingUser] = useState(true);
 
   return (
     <AuthContext.Provider
       {...props}
-      value={{ user, setUser, loadingUser, setLoadingUser }}
+      value={{
+        user,
+        setUser,
+        loadingUser,
+        setLoadingUser,
+        wardrobe,
+        setWardrobe,
+      }}
     />
   );
 };

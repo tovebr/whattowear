@@ -13,9 +13,10 @@ import React, { useState, useRef } from 'react';
 import { styles } from '../login/login.styles';
 import Logo from '../../components/logo/logo';
 import Button from '../../components/button/button';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../../firebase/config';
+import { createUserWithEmailAndPassword, signOut } from 'firebase/auth';
+import { auth, db } from '../../../firebase/config';
 import { useHeaderHeight } from '@react-navigation/elements';
+import { doc, setDoc } from 'firebase/firestore';
 
 export default function Signup({ navigation }: any) {
   const [email, setEmail] = useState('');
@@ -34,9 +35,15 @@ export default function Signup({ navigation }: any) {
         Alert.alert('Passwords do not match');
       } else {
         try {
-          await createUserWithEmailAndPassword(auth, email, password);
-          navigation.navigate('Login');
-          Alert.alert('Successfully registered, proceed to log in');
+          const { user } = await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+
+          await setDoc(doc(db, 'wardrobes', user.uid), {
+            clothes: [],
+          });
         } catch (err: any) {
           console.log(err.message);
           Alert.alert('Unsuccessful', err.message);
