@@ -9,7 +9,7 @@ import {
 import React from 'react';
 import { Clothing } from '../../types/types';
 import { styles } from './clothing.styles';
-import { Feather } from '@expo/vector-icons';
+import { capitalizeWord } from '../../utils/getCapitalizedWord';
 
 interface CLothingProps {
   clothing: Clothing;
@@ -27,15 +27,10 @@ export default function ClothingItem({
     <TouchableWithoutFeedback onPress={() => showModal(true)}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          {/* <Image style={styles.image} source={{ uri: clothing.image }} /> */}
           <View style={styles.image} />
-          {/* <View style={styles.icons}>
-          <Feather name='edit' size={24} color='black' />
-          <Feather name='trash-2' size={24} color='black' />
-        </View> */}
         </View>
-        <Text style={styles.text}>{clothing.category}</Text>
-        <Text style={styles.text}>{clothing.color}</Text>
+        <Text style={styles.text}>{capitalizeWord(clothing.category)}</Text>
+        <Text style={styles.text}>{capitalizeWord(clothing.color)}</Text>
       </View>
     </TouchableWithoutFeedback>
   );

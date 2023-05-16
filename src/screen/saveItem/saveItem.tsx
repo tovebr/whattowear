@@ -4,7 +4,12 @@ import { styles } from './saveItem.styles';
 import Button from '../../components/button/button';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { db, storage } from '../../../firebase/config';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from 'firebase/storage';
 import { useAuth } from '../../contexts/authContext';
 import {
   arrayRemove,
@@ -15,8 +20,8 @@ import {
 } from 'firebase/firestore';
 import { ScrollView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import { getSection } from '../../hooks/useCatgory';
-import { SelectedItem } from '../../types/types';
+import { getSection } from '../../utils/useCatgory';
+import { ClothSections, SelectedItem } from '../../types/types';
 
 interface SaveItemProps {
   updatePhoto?: (photo: any) => void;
@@ -65,14 +70,14 @@ export default function SaveItem({
     { key: 'multiple', value: 'Multiple' },
     { key: 'other', value: 'Other' },
   ];
-  const clothSection = getSection(category ? category : '');
+  const clothSection: ClothSections = getSection(category ? category : '');
 
   const updateDb = async (url?: string, imageId?: string) => {
-    if (item === undefined) await deleteItem();
-
     setIsloading(true);
-    try {
-      if (user) {
+    if (item !== undefined) deleteItem();
+
+    if (user) {
+      try {
         await setDoc(
           doc(db, 'wardrobes', user.uid),
           {
@@ -85,33 +90,55 @@ export default function SaveItem({
           },
           { merge: true }
         );
+        updatePhoto && updatePhoto(null);
+        if (item !== undefined) {
+          deleteItem();
+        }
+        hideModal && hideModal(false);
+        setIsloading(false);
+      } catch (error: any) {
+        console.log(error.message);
+        setIsloading(false);
       }
-    } catch (error: any) {
-      console.log(error.message);
+    } else {
+      setIsloading(false);
     }
-    setIsloading(false);
   };
 
   const deleteItem = async () => {
     setIsloading(true);
-    try {
-      if (item && user) {
-        console.log('lälä');
+    if (item && user) {
+      try {
         await updateDoc(doc(db, 'wardrobes', user.uid), {
-          [clothSection]: arrayRemove({
-            id: item.clothing.id,
-            image: item.clothing.image,
-            category,
-            color,
-          }),
+          [clothSection === item.section ? clothSection : item.section]:
+            arrayRemove({
+              id: item.clothing.id,
+              image: item.clothing.image,
+              category:
+                item.clothing.category === category
+                  ? category
+                  : item.clothing.category,
+              color:
+                item.clothing.color === color ? color : item.clothing.color,
+            }),
         });
+        const storageRef = ref(storage, `${user?.uid}/${item.clothing.id}`);
+
+        try {
+          deleteObject(storageRef);
+        } catch (error: any) {
+          console.log(error.message);
+        }
+
         hideModal && hideModal(false);
+        setIsloading(false);
+      } catch (error: any) {
+        console.log(error.message);
+        setIsloading(false);
+      } finally {
+        return true;
       }
-      // setIsloading(false);
-    } catch (error: any) {
-      console.log(error.message);
     }
-    setIsloading(false);
   };
 
   const savePic = async () => {
@@ -138,9 +165,7 @@ export default function SaveItem({
       const url = await getDownloadURL(storageRef);
 
       updateDb(url, imageId);
-
       Alert.alert('Success', 'Your photo was successfully uploaded!');
-      updatePhoto && updatePhoto(null);
     } catch (error: any) {
       console.log(error.message);
       Alert.alert('Error', error.message);

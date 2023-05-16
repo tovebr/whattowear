@@ -1,7 +1,5 @@
 export interface Wardrobe {
-  tops: Clothing[];
-  bottoms: Clothing[];
-  fullbody: Clothing[];
+  [key: string]: Clothing[];
 }
 export interface Clothing {
   id: string;
@@ -14,3 +12,5 @@ export type SelectedItem = {
   clothing: Clothing;
   section: string;
 };
+
+export type ClothSections = 'tops' | 'bottoms' | 'fullbody';

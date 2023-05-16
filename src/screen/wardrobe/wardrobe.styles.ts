@@ -5,32 +5,23 @@ export const styles = StyleSheet.create({
   container: {
     // flex: 1,
     // flexGrow: 1,
-    marginBottom: 100,
+    marginBottom: 80,
   },
   pageHeading: {
     fontSize: 40,
     textAlign: 'center',
-    marginVertical: 20,
+    marginTop: 20,
+    marginBottom: 15,
   },
-  categoryHeading: {
-    paddingHorizontal: 20,
-    fontSize: 30,
+  pageHeadingWrapper: {
+    borderBottomColor: colors.darkest,
+    borderBottomWidth: 2,
+    width: '100%',
   },
-  categorySection: {
-    paddingHorizontal: 20,
-    flexDirection: 'row',
-    marginVertical: 20,
-  },
-  modal: {
-    height: '90%',
+  categoryHeadingWrapper: {
+    borderBottomColor: colors.darkest,
+    borderBottomWidth: 2,
     width: '90%',
-    backgroundColor: colors.darkblue,
-    borderWidth: 2,
-    borderColor: 'black',
-  },
-  modalIn: {
-    backgroundColor: colors.blue,
-    height: '50%',
-    width: '50%',
+    marginHorizontal: 20,
   },
 });

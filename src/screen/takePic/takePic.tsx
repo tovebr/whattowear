@@ -32,7 +32,7 @@ export default function TakePic({ updatePhoto }: TakePicProps) {
 
   const takePic = async () => {
     let options = {
-      quality: 0.5,
+      quality: 0.2,
       base64: true,
       exif: false,
     };
