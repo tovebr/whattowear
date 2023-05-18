@@ -37,14 +37,16 @@ export default function AppBootstrap({ children }: AppBootstrapProps) {
     const loginWithStorageInfo = async () => {
       const email = await AsyncStorage.getItem('email');
       const password = await AsyncStorage.getItem('password');
+      // email && (await AsyncStorage.removeItem('email'));
+      // password && (await AsyncStorage.removeItem('password'));
       try {
         if (email && password && email.length > 0 && password.length > 0) {
           await signInWithEmailAndPassword(auth, email, password);
+          // console.log('här');
         }
       } catch (error: any) {
         console.log(error.message);
       }
-      // setLoadingUser(false);
     };
 
     if (!user) {
@@ -54,54 +56,54 @@ export default function AppBootstrap({ children }: AppBootstrapProps) {
     return () => unSubscribe();
   }, []);
 
-  useEffect(() => {
-    let unsub: Function = () => {};
-
-    if (user) {
-      try {
-        const colRef = doc(db, 'wardrobes', user?.uid);
-        unsub = onSnapshot(colRef, (doc) => {
-          if (doc.exists() && doc.data()) {
-            setWardrobe({
-              tops: doc.data().tops,
-              bottoms: doc.data().bottoms,
-              fullbody: doc.data().fullbody,
-            });
-          }
-        });
-      } catch (error: any) {
-        console.log(error.message);
-      } finally {
-        setLoadingUser(false);
-        SplashScreen.hideAsync();
-      }
-    }
-    return () => unsub();
-  }, [user]);
-
   // useEffect(() => {
-  //   setLoadingUser(true);
   //   let unsub: Function = () => {};
 
   //   if (user) {
-  //     const colRef = doc(db, 'wardrobes', user?.uid);
-  //     unsub = onSnapshot(colRef, (doc) => {
-  //       if (doc.exists() && doc.data()) {
-  //         setWardrobe({
-  //           tops: doc.data().tops,
-  //           bottoms: doc.data().bottoms,
-  //           fullbody: doc.data().fullbody,
-  //         });
-  //         // console.log(doc.data());
-  //       }
-  //     });
+  //     try {
+  //       const colRef = doc(db, 'wardrobes', user?.uid);
+  //       unsub = onSnapshot(colRef, (doc) => {
+  //         if (doc.exists() && doc.data()) {
+  //           setWardrobe({
+  //             tops: doc.data().tops,
+  //             bottoms: doc.data().bottoms,
+  //             fullbody: doc.data().fullbody,
+  //           });
+  //         }
+  //       });
+  //     } catch (error: any) {
+  //       console.log(error.message);
+  //     } finally {
+  //       setLoadingUser(false);
+  //       SplashScreen.hideAsync();
+  //     }
   //   }
-
-  //   setLoadingUser(false);
   //   return () => unsub();
   // }, [user]);
 
-  // if (!loadingUser) SplashScreen.hideAsync();
+  useEffect(() => {
+    setLoadingUser(true);
+    let unsub: Function = () => {};
+
+    if (user) {
+      const colRef = doc(db, 'wardrobes', user?.uid);
+      unsub = onSnapshot(colRef, (doc) => {
+        if (doc.exists() && doc.data()) {
+          setWardrobe({
+            tops: doc.data().tops,
+            bottoms: doc.data().bottoms,
+            fullbody: doc.data().fullbody,
+          });
+          // console.log(doc.data());
+        }
+      });
+    }
+
+    setLoadingUser(false);
+    return () => unsub();
+  }, [user]);
+
+  if (!loadingUser) SplashScreen.hideAsync();
 
   return <>{children}</>;
 }

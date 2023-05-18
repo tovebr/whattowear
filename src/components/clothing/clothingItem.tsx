@@ -27,7 +27,8 @@ export default function ClothingItem({
     <TouchableWithoutFeedback onPress={() => showModal(true)}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <View style={styles.image} />
+          {/* <View style={styles.image} /> */}
+          <Image style={styles.image} source={{ uri: clothing.image }} />
         </View>
         <Text style={styles.text}>{capitalizeWord(clothing.category)}</Text>
         <Text style={styles.text}>{capitalizeWord(clothing.color)}</Text>

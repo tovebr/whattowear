@@ -14,7 +14,7 @@ type ButtonProps = {
 export default function Button({
   title,
   loading,
-  backgroundColor = colors.darkblue,
+  backgroundColor = colors.darkest,
   color = 'white',
   ...props
 }: ButtonProps) {

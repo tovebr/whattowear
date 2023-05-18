@@ -42,7 +42,9 @@ export default function Signup({ navigation }: any) {
           );
 
           await setDoc(doc(db, 'wardrobes', user.uid), {
-            clothes: [],
+            bottoms: [],
+            tops: [],
+            fullbody: [],
           });
         } catch (err: any) {
           console.log(err.message);
@@ -66,6 +68,7 @@ export default function Signup({ navigation }: any) {
             returnKeyType='next'
             style={styles.input}
             placeholder='Email'
+            placeholderTextColor={'#969696'}
             keyboardType='email-address'
             textContentType='emailAddress'
             autoCapitalize='none'
@@ -82,6 +85,7 @@ export default function Signup({ navigation }: any) {
             returnKeyType='next'
             style={styles.input}
             placeholder='Password'
+            placeholderTextColor={'#969696'}
             textContentType='password'
             value={password}
             onChangeText={(value) => setPassword(value)}
@@ -95,6 +99,7 @@ export default function Signup({ navigation }: any) {
             returnKeyType='done'
             style={styles.input}
             placeholder='Confirm Password'
+            placeholderTextColor={'#969696'}
             textContentType='password'
             value={confirmPassword}
             onChangeText={(value) => setConfirmPassword(value)}

@@ -12,7 +12,7 @@ interface LogoProps {
 }
 
 export default function Logo(props: LogoProps) {
-  const color = props.color ? props.color : '#577d86';
+  const color = props.color ? props.color : '#2E535C';
   return (
     <View style={{ ...props, alignSelf: 'center' }}>
       <Svg viewBox='0 0 54.01 35.58'>

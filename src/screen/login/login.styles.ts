@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
     width: '80%',
   },
   heading: {
-    color: colors.darkblue,
+    color: colors.darkest,
     fontSize: 40,
     marginBottom: 20,
     textAlign: 'center',
@@ -28,14 +28,14 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   button: {
-    backgroundColor: colors.darkblue,
+    backgroundColor: colors.darkest,
   },
   registerInfo: {
     flexDirection: 'row',
     justifyContent: 'center',
   },
   register: {
-    color: colors.darkblue,
+    color: colors.darkest,
     fontSize: 20,
     paddingTop: 15,
     marginRight: 5,

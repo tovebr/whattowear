@@ -39,7 +39,7 @@ export default function Section({
               />
             ))}
           {(section === undefined || section.length < 1) && (
-            <Text style={styles.message}>No tops to display</Text>
+            <Text style={styles.message}>{`No ${sectionName} to display`}</Text>
           )}
         </ScrollView>
       </View>

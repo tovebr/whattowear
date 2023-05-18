@@ -1,3 +1,4 @@
+import { StyleSheet } from 'react-native';
 import Login from '../screen/login/login';
 import React from 'react';
 import Signup from '../screen/signup/signup';
@@ -23,30 +24,35 @@ function MainStack() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarStyle: {
-          backgroundColor: colors.light,
-          height: 65,
-          paddingBottom: 8,
-          paddingTop: 8,
+          backgroundColor: colors.lightest,
+          height: 72,
+          color: colors.darkest,
         },
 
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
           if (route.name === 'Home') {
-            return <Logo height={35} width={35} color={color} />;
+            return <Logo height={39} width={39} color={color} />;
           } else if (route.name === 'Wardrobe') {
-            return <FontAwesome5 name='tshirt' size={size} color={color} />;
+            return <FontAwesome5 name='tshirt' size={size + 2} color={color} />;
           } else if (route.name === 'AddItem') {
-            return <Foundation name='plus' size={30} color={color} />;
+            return <Foundation name='plus' size={32} color={color} />;
           } else if (route.name === 'Logout') {
-            return <FontAwesome5 name='user-alt' size={size} color={color} />;
+            return (
+              <FontAwesome5 name='user-alt' size={size + 2} color={color} />
+            );
           }
           return <Feather name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: colors.darkest,
-        tabBarInactiveTintColor: colors.darkblue,
+        tabBarActiveTintColor: colors.almostBlcak,
+        tabBarInactiveTintColor: colors.darkest,
+
         tabBarLabelStyle: {
-          fontSize: 13,
+          fontSize: 15,
+          paddingBottom: 10,
         },
+
+        tabBarActiveBackgroundColor: colors.light,
       })}
     >
       <Tab.Screen
@@ -98,3 +104,9 @@ export default function Navigator() {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  barIcon: {
+    marginVertical: 8,
+  },
+});

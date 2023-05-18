@@ -60,6 +60,7 @@ export default function Login({ navigation }: any) {
             <TextInput
               style={styles.input}
               placeholder='Email'
+              placeholderTextColor={'#969696'}
               keyboardType='email-address'
               textContentType='emailAddress'
               autoCapitalize='none'
@@ -74,6 +75,7 @@ export default function Login({ navigation }: any) {
               ref={passwordRef}
               style={styles.input}
               placeholder='Password'
+              placeholderTextColor={'#969696'}
               textContentType='password'
               value={password}
               secureTextEntry
