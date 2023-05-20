@@ -74,7 +74,7 @@ export default function SaveItem({
 
   const updateDb = async (url?: string, imageId?: string) => {
     setIsloading(true);
-    if (item !== undefined) deleteItem();
+    if (item !== undefined) deleteItem(false);
 
     if (user) {
       try {
@@ -91,9 +91,6 @@ export default function SaveItem({
           { merge: true }
         );
         updatePhoto && updatePhoto(null);
-        if (item !== undefined) {
-          deleteItem();
-        }
         hideModal && hideModal(false);
         setIsloading(false);
       } catch (error: any) {
@@ -105,7 +102,7 @@ export default function SaveItem({
     }
   };
 
-  const deleteItem = async () => {
+  const deleteItem = async (deleteImage: boolean) => {
     setIsloading(true);
     if (item && user) {
       try {
@@ -122,12 +119,15 @@ export default function SaveItem({
                 item.clothing.color === color ? color : item.clothing.color,
             }),
         });
-        const storageRef = ref(storage, `${user?.uid}/${item.clothing.id}`);
 
-        try {
-          deleteObject(storageRef);
-        } catch (error: any) {
-          console.log(error.message);
+        if (deleteImage) {
+          const storageRef = ref(storage, `${user?.uid}/${item.clothing.id}`);
+
+          try {
+            deleteObject(storageRef);
+          } catch (error: any) {
+            console.log(error.message);
+          }
         }
 
         hideModal && hideModal(false);
@@ -229,7 +229,7 @@ export default function SaveItem({
             onPress={() => {
               item === undefined
                 ? updatePhoto && updatePhoto(null)
-                : deleteItem();
+                : deleteItem(true);
             }}
           />
         </View>

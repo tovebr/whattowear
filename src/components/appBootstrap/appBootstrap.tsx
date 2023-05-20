@@ -94,7 +94,6 @@ export default function AppBootstrap({ children }: AppBootstrapProps) {
             bottoms: doc.data().bottoms,
             fullbody: doc.data().fullbody,
           });
-          // console.log(doc.data());
         }
       });
     }

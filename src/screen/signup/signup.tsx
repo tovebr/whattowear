@@ -17,11 +17,15 @@ import { createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import { auth, db } from '../../../firebase/config';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { doc, setDoc } from 'firebase/firestore';
+import { useAuth } from '../../contexts/authContext';
+import { StatusBar } from 'expo-status-bar';
 
 export default function Signup({ navigation }: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const { loadingUser, setLoadingUser } = useAuth();
 
   const emailRef = useRef<TextInput | null>(null);
   const passwordRef = useRef<TextInput | null>(null);
@@ -30,6 +34,7 @@ export default function Signup({ navigation }: any) {
   const headerHeight = useHeaderHeight();
 
   const handleNewUser = async () => {
+    setLoadingUser(true);
     if (email !== '' && password !== '' && confirmPassword !== '') {
       if (password !== confirmPassword) {
         Alert.alert('Passwords do not match');
@@ -46,9 +51,11 @@ export default function Signup({ navigation }: any) {
             tops: [],
             fullbody: [],
           });
+          setLoadingUser(false);
         } catch (err: any) {
           console.log(err.message);
           Alert.alert('Unsuccessful', err.message);
+          setLoadingUser(false);
         }
       }
     }
@@ -56,13 +63,14 @@ export default function Signup({ navigation }: any) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar style='dark' />
       <KeyboardAvoidingView
         keyboardVerticalOffset={headerHeight}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={[styles.view, { flex: 1 }]}
       >
         <ScrollView>
-          <Logo height={150} width={150} />
+          <Logo height={150} width={150} marginTop={60} marginBottom={40} />
           <TextInput
             ref={emailRef}
             returnKeyType='next'
@@ -105,7 +113,11 @@ export default function Signup({ navigation }: any) {
             onChangeText={(value) => setConfirmPassword(value)}
             secureTextEntry
           />
-          <Button title='Sign Up' onPress={handleNewUser} />
+          <Button
+            loading={loadingUser}
+            title='Sign Up'
+            onPress={handleNewUser}
+          />
           <View style={styles.loginInfo}>
             <Text style={styles.register}>Already have an account?</Text>
             <TouchableOpacity
