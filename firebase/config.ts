@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import {
@@ -10,6 +10,11 @@ import {
   MESSAGING_SENDER_ID,
   APP_ID,
 } from '@env';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  getReactNativePersistence,
+  initializeAuth,
+} from 'firebase/auth/react-native';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -24,6 +29,10 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-export const auth = getAuth();
+// export const auth = getAuth();
+export const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage),
+});
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+// connectAuthEmulator(auth, 'http://127.0.0.1:9099');
